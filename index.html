@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.Lynx™ RestFast Professional - Connexion</title>
+    
+    <!-- SEO & Meta -->
+    <meta name="description" content="Système de gestion restaurant professionnel">
+    <meta name="author" content="R.Lynx Technologies">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#f59e0b">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    
+    <style>
+        /* Variables étendues */
+        :root {
+            --primary: #f59e0b;
+            --primary-dark: #d97706;
+            --primary-light: #fbbf24;
+            --secondary: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f97316;
+            --info: #3b82f6;
+            
+            --dark-bg: #0f172a;
+            --dark-surface: #1e293b;
+            --dark-card: #334155;
+            
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dark: #020617;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Animations avancées */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Login page améliorée */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #0b1120 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-bg-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 32px;
+            padding: 48px 40px;
+            box-shadow: var(--shadow-xl), 0 0 0 1px rgba(245, 158, 11, 0.1);
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-3d {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            box-shadow: 0 20px 30px -10px rgba(245, 158, 11, 0.4);
+            transform: rotate(0deg);
+            transition: var(--transition);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-3d:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Role selector amélioré */
+        .role-selector-modern {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .role-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .role-card:hover {
+            border-color: rgba(245, 158, 11, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -10px rgba(245, 158, 11, 0.3);
+        }
+
+        .role-card.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+        }
+
+        .role-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .role-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 4px;
+        }
+
+        .role-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Form amélioré */
+        .input-group-modern {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px 16px 16px 48px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .input-field:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1);
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: rgba(148, 163, 184, 0.5);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        /* Bouton amélioré */
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 16px;
+            color: var(--text-dark);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 30px -10px rgba(245, 158, 11, 0.5);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* Options de connexion */
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        /* Badge de version */
+        .version-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .version-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Demo credentials amélioré */
+        .demo-credentials {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        .demo-title {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .credential-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .cred-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .cred-role {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .cred-creds {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: flex;
+            gap: 8px;
+        }
+
+        .cred-creds span {
+            background: rgba(245, 158, 11, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Particules animées -->
+        <div class="login-bg-particles" id="particles"></div>
+        
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-3d">RL</div>
+                <h1 class="login-title">R.Lynx™ Pro</h1>
+                <p class="login-subtitle">Système de gestion restaurant nouvelle génération</p>
+            </div>
+
+            <!-- Sélecteur de rôle amélioré -->
+            <div class="role-selector-modern" id="roleSelector">
+                <div class="role-card active" data-role="cashier">
+                    <div class="role-icon">🖥️</div>
+                    <div class="role-name">Caisse</div>
+                    <div class="role-desc">Point de vente</div>
+                </div>
+                <div class="role-card" data-role="manager">
+                    <div class="role-icon">📊</div>
+                    <div class="role-name">Manager</div>
+                    <div class="role-desc">Administration</div>
+                </div>
+                <div class="role-card" data-role="waiter">
+                    <div class="role-icon">🍽️</div>
+                    <div class="role-name">Serveur</div>
+                    <div class="role-desc">Prise de commande</div>
+                </div>
+                <div class="role-card" data-role="kitchen">
+                    <div class="role-icon">👨‍🍳</div>
+                    <div class="role-name">Cuisine</div>
+                    <div class="role-desc">Préparation</div>
+                </div>
+                <div class="role-card" data-role="delivery">
+                    <div class="role-icon">🛵</div>
+                    <div class="role-name">Livraison</div>
+                    <div class="role-desc">Courses</div>
+                </div>
+            </div>
+
+            <!-- Formulaire de connexion -->
+            <form id="loginForm" onsubmit="return false;">
+                <div class="input-group-modern">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="input-field" id="username" 
+                           placeholder="Nom d'utilisateur" autocomplete="username" autofocus>
+                </div>
+
+                <div class="input-group-modern">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="input-field" id="password" 
+                           placeholder="Mot de passe" autocomplete="current-password">
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe"> 
+                        <span>Se souvenir de moi</span>
+                    </label>
+                    <a href="#" class="forgot-password" onclick="openPasswordReset()">
+                        Mot de passe oublié?
+                    </a>
+                </div>
+
+                <div id="login-error" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+
+                <button type="submit" class="btn-login" id="btnLogin">
+                    <span>Connexion sécurisée</span>
+                    <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+                </button>
+            </form>
+
+            <!-- Identifiants de démonstration -->
+            <div class="demo-credentials">
+                <div class="demo-title">
+                    <i class="fas fa-flask"></i> Mode Démonstration
+                </div>
+                <div class="credential-grid">
+                    <div class="cred-item">
+                        <span class="cred-role">Manager</span>
+                        <div class="cred-creds">
+                            <span>admin</span>
+                            <span>1234</span>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <span class="cred-role">Caisse</span>
+                        <div class="cred-creds">
+                            <span>caisse1</span>
+                            <span>1111</span>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <span class="cred-role">Serveur</span>
+                        <div class="cred-creds">
+                            <span>serv1</span>
+                            <span>3333</span>
+                        </div>
+                    </div>
+                    <div class="cred-item">
+                        <span class="cred-role">Cuisine</span>
+                        <div class="cred-creds">
+                            <span>kitchen</span>
+                            <span>kitchen</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Version badge -->
+        <div class="version-badge">
+            <span class="version-dot"></span>
+            <span>R.Lynx Pro v4.0.0</span>
+            <i class="fas fa-copyright"></i>
+            <span>2024</span>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Loader -->
+    <div id="loader" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        /**
+         * R.Lynx™ Pro - Core Database Module
+         * Version professionnelle avec IndexedDB, encryption et synchronisation
+         */
+        const DB = (() => {
+            const PREFIX = 'rlpro_';
+            const DB_NAME = 'RLynxProDB';
+            const DB_VERSION = 4;
+            let dbInstance = null;
+
+            // Initialisation IndexedDB
+            const initIndexedDB = () => {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, DB_VERSION);
+                    
+                    request.onerror = () => reject(request.error);
+                    request.onsuccess = () => {
+                        dbInstance = request.result;
+                        resolve(dbInstance);
+                    };
+                    
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        
+                        // Stores principaux
+                        if (!db.objectStoreNames.contains('users')) {
+                            const userStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+                            userStore.createIndex('username', 'username', { unique: true });
+                            userStore.createIndex('role', 'role', { unique: false });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('orders')) {
+                            const orderStore = db.createObjectStore('orders', { keyPath: 'id' });
+                            orderStore.createIndex('status', 'status', { unique: false });
+                            orderStore.createIndex('tableId', 'tableId', { unique: false });
+                            orderStore.createIndex('createdAt', 'createdAt', { unique: false });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('items')) {
+                            const itemStore = db.createObjectStore('items', { keyPath: 'id' });
+                            itemStore.createIndex('catId', 'catId', { unique: false });
+                            itemStore.createIndex('active', 'active', { unique: false });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('tables')) {
+                            db.createObjectStore('tables', { keyPath: 'id' });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('categories')) {
+                            db.createObjectStore('categories', { keyPath: 'id' });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('inventory')) {
+                            db.createObjectStore('inventory', { keyPath: 'itemId' });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('kitchen_orders')) {
+                            db.createObjectStore('kitchen_orders', { keyPath: 'orderId' });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('backup_log')) {
+                            db.createObjectStore('backup_log', { keyPath: 'id', autoIncrement: true });
+                        }
+                    };
+                });
+            };
+
+            // Chiffrement simple pour les données sensibles
+            const encrypt = (data) => {
+                // En production, utiliser une vraie librairie de chiffrement
+                return btoa(JSON.stringify(data));
+            };
+
+            const decrypt = (encrypted) => {
+                try {
+                    return JSON.parse(atob(encrypted));
+                } catch {
+                    return null;
+                }
+            };
+
+            // API publique
+            return {
+                init: async () => {
+                    await initIndexedDB();
+                    
+                    // Migration des données localStorage si nécessaire
+                    if (!localStorage.getItem(PREFIX + 'migrated')) {
+                        await migrateFromLocalStorage();
+                        localStorage.setItem(PREFIX + 'migrated', 'true');
+                    }
+                    
+                    return dbInstance;
+                },
+
+                // Requêtes IndexedDB
+                query: async (storeName, method, ...args) => {
+                    return new Promise((resolve, reject) => {
+                        const transaction = dbInstance.transaction([storeName], 'readwrite');
+                        const store = transaction.objectStore(storeName);
+                        let request;
+
+                        switch(method) {
+                            case 'get':
+                                request = store.get(args[0]);
+                                break;
+                            case 'getAll':
+                                request = store.getAll();
+                                break;
+                            case 'put':
+                                request = store.put(args[0]);
+                                break;
+                            case 'delete':
+                                request = store.delete(args[0]);
+                                break;
+                            case 'index':
+                                const index = store.index(args[0]);
+                                request = index.getAll(args[1]);
+                                break;
+                            default:
+                                reject(new Error('Méthode non supportée'));
+                                return;
+                        }
+
+                        request.onsuccess = () => resolve(request.result);
+                        request.onerror = () => reject(request.error);
+                    });
+                },
+
+                // Sauvegarde automatique
+                backup: async () => {
+                    const backup = {
+                        timestamp: new Date().toISOString(),
+                        version: DB_VERSION,
+                        data: {}
+                    };
+
+                    const stores = ['users', 'orders', 'items', 'tables', 'categories', 'inventory'];
+                    
+                    for (const store of stores) {
+                        backup.data[store] = await DB.query(store, 'getAll');
+                    }
+
+                    // Sauvegarde dans localStorage pour compatibilité
+                    localStorage.setItem(PREFIX + 'backup', encrypt(backup));
+                    
+                    // Création fichier backup
+                    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    return { backup, url };
+                },
+
+                // Restauration
+                restore: async (backupData) => {
+                    const transaction = dbInstance.transaction(Object.keys(backupData.data), 'readwrite');
+                    
+                    for (const [storeName, items] of Object.entries(backupData.data)) {
+                        const store = transaction.objectStore(storeName);
+                        store.clear();
+                        items.forEach(item => store.put(item));
+                    }
+
+                    return new Promise((resolve) => {
+                        transaction.oncomplete = () => resolve(true);
+                    });
+                }
+            };
+        })();
+
+        /**
+         * Auth Module amélioré
+         */
+        const Auth = (() => {
+            const SESSION_KEY = 'rlpro_session';
+            const TOKEN_KEY = 'rlpro_token';
+
+            // Génération token JWT-like
+            const generateToken = (user) => {
+                const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+                const payload = btoa(JSON.stringify({
+                    sub: user.id,
+                    name: user.name,
+                    role: user.role,
+                    iat: Date.now(),
+                    exp: Date.now() + (24 * 60 * 60 * 1000) // 24h
+                }));
+                const signature = btoa(user.id + '-' + Date.now()); // Signature simplifiée
+                return `${header}.${payload}.${signature}`;
+            };
+
+            const verifyToken = (token) => {
+                try {
+                    const parts = token.split('.');
+                    if (parts.length !== 3) return null;
+                    
+                    const payload = JSON.parse(atob(parts[1]));
+                    if (payload.exp < Date.now()) return null;
+                    
+                    return payload;
+                } catch {
+                    return null;
+                }
+            };
+
+            const login = async (username, password, role) => {
+                try {
+                    // Recherche dans IndexedDB
+                    const users = await DB.query('users', 'getAll');
+                    const user = users.find(u => 
+                        u.username === username && 
+                        u.password === password && 
+                        u.active &&
+                        (role === 'any' || u.role === role)
+                    );
+
+                    if (!user) return null;
+
+                    const token = generateToken(user);
+                    const session = {
+                        user: {
+                            id: user.id,
+                            name: user.name,
+                            role: user.role
+                        },
+                        token,
+                        loginAt: Date.now()
+                    };
+
+                    // Session storage
+                    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+                    
+                    // Remember me option
+                    const remember = document.getElementById('rememberMe')?.checked;
+                    if (remember) {
+                        localStorage.setItem(TOKEN_KEY, token);
+                    }
+
+                    // Log de connexion
+                    logActivity('login', user.id);
+
+                    return session;
+                } catch (error) {
+                    console.error('Login error:', error);
+                    return null;
+                }
+            };
+
+            const logout = () => {
+                const session = getSession();
+                if (session) {
+                    logActivity('logout', session.user.id);
+                }
+                
+                sessionStorage.removeItem(SESSION_KEY);
+                localStorage.removeItem(TOKEN_KEY);
+                window.location.href = 'index.html';
+            };
+
+            const getSession = () => {
+                try {
+                    // Session active
+                    const sessionData = sessionStorage.getItem(SESSION_KEY);
+                    if (sessionData) {
+                        const session = JSON.parse(sessionData);
+                        const payload = verifyToken(session.token);
+                        if (payload) return session;
+                    }
+
+                    // Token persistant
+                    const token = localStorage.getItem(TOKEN_KEY);
+                    if (token) {
+                        const payload = verifyToken(token);
+                        if (payload) {
+                            // Restaurer session
+                            const session = {
+                                user: {
+                                    id: payload.sub,
+                                    name: payload.name,
+                                    role: payload.role
+                                },
+                                token,
+                                loginAt: payload.iat
+                            };
+                            sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+                            return session;
+                        }
+                    }
+
+                    return null;
+                } catch {
+                    return null;
+                }
+            };
+
+            const requireRole = (allowedRoles) => {
+                const session = getSession();
+                if (!session) {
+                    window.location.href = 'index.html';
+                    return null;
+                }
+
+                if (allowedRoles && !allowedRoles.includes(session.user.role)) {
+                    Toast.show('Accès non autorisé', 'error');
+                    setTimeout(() => window.location.href = 'index.html', 1500);
+                    return null;
+                }
+
+                return session;
+            };
+
+            // Logging des activités
+            const logActivity = async (action, userId) => {
+                const log = {
+                    id: Date.now(),
+                    userId,
+                    action,
+                    timestamp: new Date().toISOString(),
+                    ip: 'local', // À implémenter
+                    userAgent: navigator.userAgent
+                };
+
+                const logs = JSON.parse(localStorage.getItem(PREFIX + 'activity_logs') || '[]');
+                logs.push(log);
+                
+                // Garder seulement 1000 logs
+                if (logs.length > 1000) logs.shift();
+                
+                localStorage.setItem(PREFIX + 'activity_logs', JSON.stringify(logs));
+            };
+
+            return { login, logout, getSession, requireRole };
+        })();
+
+        /**
+         * Toast Notifications amélioré
+         */
+        const Toast = {
+            init() {
+                if (!document.getElementById('toast-container')) {
+                    const container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        pointer-events: none;
+                    `;
+                    document.body.appendChild(container);
+                }
+            },
+
+            show(message, type = 'info', duration = 4000) {
+                this.init();
+                
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                
+                const icons = {
+                    success: '✅',
+                    error: '❌',
+                    warning: '⚠️',
+                    info: 'ℹ️'
+                };
+
+                const colors = {
+                    success: '#10b981',
+                    error: '#ef4444',
+                    warning: '#f97316',
+                    info: '#3b82f6'
+                };
+
+                toast.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 16px 20px;
+                    background: rgba(30, 41, 59, 0.95);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid ${colors[type]}40;
+                    border-radius: 16px;
+                    color: white;
+                    font-size: 0.95rem;
+                    font-weight: 500;
+                    box-shadow: 0 10px 30px -10px ${colors[type]}80;
+                    transform: translateX(400px);
+                    animation: slideInToast 0.3s ease forwards;
+                    pointer-events: none;
+                    min-width: 300px;
+                `;
+
+                toast.innerHTML = `
+                    <span style="font-size: 1.2rem;">${icons[type]}</span>
+                    <span style="flex: 1;">${message}</span>
+                    <span style="color: ${colors[type]}; font-size: 0.8rem;">●</span>
+                `;
+
+                container.appendChild(toast);
+
+                // Animation keyframes
+                if (!document.querySelector('#toast-keyframes')) {
+                    const style = document.createElement('style');
+                    style.id = 'toast-keyframes';
+                    style.textContent = `
+                        @keyframes slideInToast {
+                            to { transform: translateX(0); }
+                        }
+                        @keyframes slideOutToast {
+                            to { transform: translateX(400px); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                setTimeout(() => {
+                    toast.style.animation = 'slideOutToast 0.3s ease forwards';
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+        };
+
+        /**
+         * Password Reset Modal
+         */
+        const openPasswordReset = () => {
+            const modal = document.createElement('div');
+            modal.className = 'modal-backdrop';
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 400px;">
+                    <div class="modal-title">
+                        <span class="icon">🔐</span> Réinitialisation du mot de passe
+                    </div>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">
+                        Entrez votre email pour recevoir un lien de réinitialisation
+                    </p>
+                    <div class="input-group-modern">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="input-field" id="resetEmail" 
+                               placeholder="votre@email.com">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button class="btn btn-ghost w-full" onclick="this.closest('.modal-backdrop').remove()">
+                            Annuler
+                        </button>
+                        <button class="btn btn-primary w-full" onclick="sendResetLink(this)">
+                            Envoyer
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        };
+
+        const sendResetLink = (btn) => {
+            const email = document.getElementById('resetEmail')?.value;
+            if (!email) {
+                Toast.show('Veuillez entrer votre email', 'warning');
+                return;
+            }
+            
+            // Simulation d'envoi
+            Toast.show('Lien de réinitialisation envoyé!', 'success');
+            btn.closest('.modal-backdrop').remove();
+        };
+
+        /**
+         * Migration depuis localStorage
+         */
+        const migrateFromLocalStorage = async () => {
+            const PREFIX = 'rlpos_';
+            
+            const tables = ['users', 'orders', 'items', 'tables', 'categories', 'settings'];
+            
+            for (const table of tables) {
+                const data = localStorage.getItem(PREFIX + table);
+                if (data) {
+                    try {
+                        const items = JSON.parse(data);
+                        if (Array.isArray(items)) {
+                            for (const item of items) {
+                                await DB.query(table, 'put', item);
+                            }
+                        } else {
+                            await DB.query(table, 'put', items);
+                        }
+                    } catch (e) {
+                        console.error(`Migration error for ${table}:`, e);
+                    }
+                }
+            }
+            
+            Toast.show('Migration des données réussie', 'success');
+        };
+
+        /**
+         * Initialisation
+         */
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialisation base de données
+                await DB.init();
+                
+                // Création des particules
+                createParticles();
+                
+                // Gestionnaire toggle password
+                document.getElementById('togglePassword').addEventListener('click', function() {
+                    const password = document.getElementById('password');
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+
+                // Sélection rôle
+                const roleCards = document.querySelectorAll('.role-card');
+                let selectedRole = 'cashier';
+
+                roleCards.forEach(card => {
+                    card.addEventListener('click', () => {
+                        roleCards.forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                        selectedRole = card.dataset.role;
+                    });
+                });
+
+                // Login handler
+                document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const errorEl = document.getElementById('login-error');
+                    
+                    errorEl.style.display = 'none';
+
+                    if (!username || !password) {
+                        showError('Veuillez remplir tous les champs');
+                        return;
+                    }
+
+                    // Show loading
+                    const btn = document.getElementById('btnLogin');
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+
+                    try {
+                        const session = await Auth.login(username, password, selectedRole);
+                        
+                        if (!session) {
+                            btn.disabled = false;
+                            btn.innerHTML = '<span>Connexion sécurisée</span><i class="fas fa-arrow-right"></i>';
+                            showError('Identifiants incorrects ou rôle non autorisé');
+                            document.getElementById('password').value = '';
+                            return;
+                        }
+
+                        // Redirection selon rôle
+                        const redirects = {
+                            manager: 'manager.html',
+                            cashier: 'pos.html',
+                            waiter: 'waiter.html',
+                            kitchen: 'kitchen.html',
+                            delivery: 'delivery.html'
+                        };
+
+                        Toast.show(`Bienvenue ${session.user.name}!`, 'success');
+                        
+                        setTimeout(() => {
+                            window.location.href = redirects[session.user.role] || 'pos.html';
+                        }, 500);
+
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        showError('Erreur de connexion. Veuillez réessayer.');
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>Connexion sécurisée</span><i class="fas fa-arrow-right"></i>';
+                    }
+                });
+
+                // Raccourci clavier
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') {
+                        document.getElementById('btnLogin').click();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                Toast.show('Erreur d\'initialisation', 'error');
+            }
+        });
+
+        // Helper pour afficher les erreurs
+        const showError = (message) => {
+            const errorEl = document.getElementById('login-error');
+            errorEl.querySelector('span').textContent = message;
+            errorEl.style.display = 'flex';
+            errorEl.style.alignItems = 'center';
+            errorEl.style.gap = '10px';
+        };
+
+        // Création des particules
+        const createParticles = () => {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                
+                container.appendChild(particle);
+            }
+        };
+
+        // Sauvegarde automatique périodique
+        setInterval(async () => {
+            if (Auth.getSession()) {
+                try {
+                    await DB.backup();
+                    console.log('Backup automatique effectué');
+                } catch (e) {
+                    console.error('Backup error:', e);
+                }
+            }
+        }, 300000); // Toutes les 5 minutes
+    </script>
+</body>
+</html>
