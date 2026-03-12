@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.Lynx™ Pro - Écran Cuisine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #f59e0b;
+            --primary-dark: #d97706;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f97316;
+            --dark: #0f172a;
+            --dark-surface: #1e293b;
+            --dark-card: #334155;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--text-light);
+            overflow: hidden;
+        }
+
+        #kitchen-app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Top Bar */
+        .kitchen-topbar {
+            background: var(--dark-surface);
+            border-bottom: 2px solid var(--primary);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kitchen-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .kitchen-title i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .kitchen-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .kitchen-title span {
+            color: var(--primary);
+        }
+
+        .kitchen-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .stat-value.warning {
+            color: var(--warning);
+        }
+
+        .stat-value.critical {
+            color: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        /* Filtres */
+        .kitchen-filters {
+            padding: 16px 24px;
+            background: var(--dark-surface);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-light);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--dark);
+            border-color: var(--primary);
+        }
+
+        .filter-btn.danger {
+            color: var(--danger);
+        }
+
+        .filter-btn.danger.active {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        /* Grid des commandes */
+        .orders-grid {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            align-content: start;
+        }
+
+        .order-card {
+            background: var(--dark-card);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideIn 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.5);
+            border-color: var(--primary);
+        }
+
+        .order-card.urgent {
+            border-left: 4px solid var(--danger);
+            animation: pulse-border 2s infinite;
+        }
+
+        .order-header {
+            padding: 16px;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .order-info h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .order-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .order-timer {
+            font-family: 'Monaco', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 30px;
+        }
+
+        .order-timer.normal {
+            color: var(--success);
+        }
+
+        .order-timer.warning {
+            color: var(--warning);
+        }
+
+        .order-timer.critical {
+            color: var(--danger);
+            animation: blink 1s infinite;
+        }
+
+        .order-items {
+            padding: 16px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-qty {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .item-notes {
+            font-size: 0.8rem;
+            color: var(--warning);
+            margin-left: 42px;
+            margin-top: -4px;
+            margin-bottom: 4px;
+        }
+
+        .order-footer {
+            padding: 16px;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-start:hover {
+            background: var(--primary-dark);
+            transform: scale(1.02);
+        }
+
+        .btn-ready {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-ready:hover {
+            filter: brightness(1.1);
+            transform: scale(1.02);
+        }
+
+        .btn-delay {
+            background: transparent;
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .btn-delay:hover {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--danger); }
+            50% { border-color: transparent; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Modal */
+        .delay-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--dark-card);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--primary);
+            z-index: 1000;
+        }
+
+        .delay-modal h3 {
+            margin-bottom: 20px;
+            color: var(--warning);
+        }
+
+        .delay-options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .delay-option {
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delay-option:hover {
+            border-color: var(--warning);
+        }
+
+        .delay-option.selected {
+            border-color: var(--warning);
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Notification */
+        .kitchen-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            animation: slideInRight 0.3s ease;
+            z-index: 2000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="kitchen-app">
+        <div class="kitchen-topbar">
+            <div class="kitchen-title">
+                <i class="fas fa-utensils"></i>
+                <h1>R.Lynx<span>Kitchen</span></h1>
+            </div>
+            
+            <div class="kitchen-stats">
+                <div class="stat-item">
+                    <span class="stat-label">En attente</span>
+                    <span class="stat-value" id="stat-pending">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">En préparation</span>
+                    <span class="stat-value" id="stat-preparing">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Prêtes</span>
+                    <span class="stat-value" id="stat-ready">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">En retard</span>
+                    <span class="stat-value critical" id="stat-late">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="kitchen-filters">
+            <button class="filter-btn active" data-filter="all">Toutes</button>
+            <button class="filter-btn" data-filter="pending">En attente</button>
+            <button class="filter-btn" data-filter="preparing">En cours</button>
+            <button class="filter-btn" data-filter="ready">Prêtes</button>
+            <button class="filter-btn danger" data-filter="late">En retard</button>
+            <div style="flex:1"></div>
+            <button class="filter-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Actualiser
+            </button>
+        </div>
+
+        <div class="orders-grid" id="ordersGrid"></div>
+    </div>
+
+    <!-- Templates -->
+    <template id="orderCardTemplate">
+        <div class="order-card">
+            <div class="order-header">
+                <div class="order-info">
+                    <h3 class="order-table">Table X</h3>
+                    <div class="order-meta">
+                        <span class="order-number">#1234</span>
+                        <span class="order-time">12:34</span>
+                    </div>
+                </div>
+                <div class="order-timer normal">00:00</div>
+            </div>
+            <div class="order-items"></div>
+            <div class="order-footer"></div>
+        </div>
+    </template>
+
+    <script>
+        /**
+         * Kitchen Display System (KDS)
+         * Gestion professionnelle des commandes en cuisine
+         */
+
+        // Configuration
+        const KITCHEN_CONFIG = {
+            refreshInterval: 5000, // 5 secondes
+            warningTime: 10 * 60, // 10 minutes
+            criticalTime: 20 * 60, // 20 minutes
+            soundEnabled: true,
+            autoPrint: true,
+            printerName: 'Kitchen Printer'
+        };
+
+        // État
+        let kitchenState = {
+            orders: [],
+            filter: 'all',
+            timers: {},
+            audioContext: null
+        };
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initKitchen();
+            
+            // Rafraîchissement périodique
+            setInterval(refreshOrders, KITCHEN_CONFIG.refreshInterval);
+            
+            // Gestionnaires filtres
+            document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    kitchenState.filter = btn.dataset.filter;
+                    renderOrders();
+                });
+            });
+
+            // Refresh manuel
+            document.getElementById('refreshBtn').addEventListener('click', refreshOrders);
+
+            // Sons
+            if (KITCHEN_CONFIG.soundEnabled) {
+                initAudio();
+            }
+        });
+
+        // Initialisation audio
+        const initAudio = () => {
+            kitchenState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        };
+
+        // Chargement des commandes
+        const refreshOrders = async () => {
+            try {
+                const orders = await fetchKitchenOrders();
+                kitchenState.orders = orders;
+                
+                // Mise à jour des timers
+                updateTimers();
+                
+                // Vérification nouvelles commandes
+                checkNewOrders(orders);
+                
+                renderOrders();
+                updateStats();
+            } catch (error) {
+                console.error('Error refreshing orders:', error);
+                showNotification('Erreur de chargement', 'error');
+            }
+        };
+
+        // Récupération des commandes
+        const fetchKitchenOrders = async () => {
+            // Simule API call - À remplacer par vraie requête
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const orders = JSON.parse(localStorage.getItem('rlpro_kitchen_orders') || '[]');
+                    
+                    // Ajouter des commandes de test si vide
+                    if (orders.length === 0) {
+                        const demoOrders = generateDemoOrders();
+                        resolve(demoOrders);
+                    } else {
+                        resolve(orders);
+                    }
+                }, 300);
+            });
+        };
+
+        // Génération commandes test
+        const generateDemoOrders = () => {
+            return [
+                {
+                    id: 1001,
+                    number: 1001,
+                    tableId: 5,
+                    items: [
+                        { name: 'Entrecôte 250g', qty: 2, notes: 'Saignante' },
+                        { name: 'Frites', qty: 2, notes: '' },
+                        { name: 'Sauce poivre', qty: 1, notes: 'À part' }
+                    ],
+                    status: 'pending',
+                    createdAt: new Date(Date.now() - 5*60000).toISOString(),
+                    priority: 'normal'
+                },
+                {
+                    id: 1002,
+                    number: 1002,
+                    tableId: 3,
+                    items: [
+                        { name: 'Pizza Margherita', qty: 1, notes: 'Sans olives' },
+                        { name: 'Pizza Reine', qty: 1, notes: '' },
+                        { name: 'Salade', qty: 1, notes: 'Vinaigrette à part' }
+                    ],
+                    status: 'pending',
+                    createdAt: new Date(Date.now() - 15*60000).toISOString(),
+                    priority: 'normal'
+                },
+                {
+                    id: 1003,
+                    number: 1003,
+                    tableId: 8,
+                    items: [
+                        { name: 'Poulet rôti', qty: 1, notes: 'Bien cuit' },
+                        { name: 'Purée', qty: 1, notes: '' },
+                        { name: 'Légumes grillés', qty: 1, notes: 'Sans ail' }
+                    ],
+                    status: 'preparing',
+                    createdAt: new Date(Date.now() - 25*60000).toISOString(),
+                    startedAt: new Date(Date.now() - 20*60000).toISOString(),
+                    priority: 'urgent'
+                }
+            ];
+        };
+
+        // Sauvegarde commandes
+        const saveKitchenOrders = (orders) => {
+            localStorage.setItem('rlpro_kitchen_orders', JSON.stringify(orders));
+        };
+
+        // Mise à jour timers
+        const updateTimers = () => {
+            kitchenState.orders.forEach(order => {
+                const startTime = order.startedAt ? new Date(order.startedAt) : new Date(order.createdAt);
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                
+                if (!kitchenState.timers[order.id]) {
+                    kitchenState.timers[order.id] = setInterval(() => {
+                        renderOrderTimer(order.id);
+                    }, 1000);
+                }
+            });
+        };
+
+        // Rendu timer
+        const renderOrderTimer = (orderId) => {
+            const order = kitchenState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const timerEl = document.querySelector(`.order-card[data-id="${orderId}"] .order-timer`);
+            if (!timerEl) return;
+
+            const startTime = order.startedAt ? new Date(order.startedAt) : new Date(order.createdAt);
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            const timeStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            timerEl.textContent = timeStr;
+
+            // Gestion couleurs selon délai
+            if (order.status === 'preparing') {
+                if (elapsed > KITCHEN_CONFIG.criticalTime) {
+                    timerEl.className = 'order-timer critical';
+                } else if (elapsed > KITCHEN_CONFIG.warningTime) {
+                    timerEl.className = 'order-timer warning';
+                } else {
+                    timerEl.className = 'order-timer normal';
+                }
+            }
+        };
+
+        // Vérification nouvelles commandes
+        const checkNewOrders = (newOrders) => {
+            const oldIds = new Set(kitchenState.orders.map(o => o.id));
+            const newOnes = newOrders.filter(o => !oldIds.has(o.id));
+            
+            newOnes.forEach(order => {
+                // Son
+                if (KITCHEN_CONFIG.soundEnabled) {
+                    playNotificationSound();
+                }
+                
+                // Notification
+                showNotification(`Nouvelle commande table ${order.tableId}`, 'info');
+                
+                // Impression auto
+                if (KITCHEN_CONFIG.autoPrint) {
+                    printKitchenOrder(order);
+                }
+            });
+        };
+
+        // Son notification
+        const playNotificationSound = () => {
+            if (!kitchenState.audioContext) return;
+            
+            try {
+                const osc = kitchenState.audioContext.createOscillator();
+                const gain = kitchenState.audioContext.createGain();
+                
+                osc.connect(gain);
+                gain.connect(kitchenState.audioContext.destination);
+                
+                osc.frequency.value = 880;
+                gain.gain.value = 0.3;
+                
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.001, kitchenState.audioContext.currentTime + 0.5);
+                osc.stop(kitchenState.audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.error('Audio error:', e);
+            }
+        };
+
+        // Rendu commandes
+        const renderOrders = () => {
+            const grid = document.getElementById('ordersGrid');
+            let filteredOrders = kitchenState.orders;
+
+            // Filtrage
+            switch(kitchenState.filter) {
+                case 'pending':
+                    filteredOrders = filteredOrders.filter(o => o.status === 'pending');
+                    break;
+                case 'preparing':
+                    filteredOrders = filteredOrders.filter(o => o.status === 'preparing');
+                    break;
+                case 'ready':
+                    filteredOrders = filteredOrders.filter(o => o.status === 'ready');
+                    break;
+                case 'late':
+                    filteredOrders = filteredOrders.filter(o => {
+                        if (o.status !== 'preparing') return false;
+                        const startTime = o.startedAt ? new Date(o.startedAt) : new Date(o.createdAt);
+                        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                        return elapsed > KITCHEN_CONFIG.warningTime;
+                    });
+                    break;
+            }
+
+            if (filteredOrders.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:60px; color: var(--text-muted);">
+                        <i class="fas fa-check-circle" style="font-size:3rem; margin-bottom:20px;"></i>
+                        <p>Aucune commande à afficher</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Tri : prioritaires d'abord
+            filteredOrders.sort((a, b) => {
+                if (a.priority === 'urgent' && b.priority !== 'urgent') return -1;
+                if (a.priority !== 'urgent' && b.priority === 'urgent') return 1;
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+
+            grid.innerHTML = filteredOrders.map(order => renderOrderCard(order)).join('');
+        };
+
+        // Rendu carte commande
+        const renderOrderCard = (order) => {
+            const startTime = order.startedAt ? new Date(order.startedAt) : new Date(order.createdAt);
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            let timerClass = 'normal';
+            if (order.status === 'preparing') {
+                if (elapsed > KITCHEN_CONFIG.criticalTime) timerClass = 'critical';
+                else if (elapsed > KITCHEN_CONFIG.warningTime) timerClass = 'warning';
+            }
+
+            const urgentClass = order.priority === 'urgent' ? 'urgent' : '';
+
+            return `
+                <div class="order-card ${urgentClass}" data-id="${order.id}">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h3 class="order-table">Table ${order.tableId}</h3>
+                            <div class="order-meta">
+                                <span class="order-number">#${order.number}</span>
+                                <span class="order-time">${new Date(order.createdAt).toLocaleTimeString()}</span>
+                            </div>
+                        </div>
+                        <div class="order-timer ${timerClass}">
+                            ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item">
+                                <div class="item-qty">${item.qty}</div>
+                                <div class="item-name">${item.name}</div>
+                            </div>
+                            ${item.notes ? `<div class="item-notes"><i class="fas fa-info-circle"></i> ${item.notes}</div>` : ''}
+                        `).join('')}
+                    </div>
+                    <div class="order-footer">
+                        ${renderOrderActions(order)}
+                    </div>
+                </div>
+            `;
+        };
+
+        // Actions selon statut
+        const renderOrderActions = (order) => {
+            switch(order.status) {
+                case 'pending':
+                    return `
+                        <button class="action-btn btn-start" onclick="startOrder(${order.id})">
+                            <i class="fas fa-play"></i> Commencer
+                        </button>
+                        <button class="action-btn btn-delay" onclick="delayOrder(${order.id})">
+                            <i class="fas fa-clock"></i> Reporter
+                        </button>
+                    `;
+                case 'preparing':
+                    return `
+                        <button class="action-btn btn-ready" onclick="markAsReady(${order.id})">
+                            <i class="fas fa-check"></i> Prêt
+                        </button>
+                        <button class="action-btn btn-delay" onclick="delayOrder(${order.id})">
+                            <i class="fas fa-clock"></i> Reporter
+                        </button>
+                    `;
+                case 'ready':
+                    return `
+                        <button class="action-btn btn-ready" disabled>
+                            <i class="fas fa-check-circle"></i> Servi
+                        </button>
+                    `;
+                default:
+                    return '';
+            }
+        };
+
+        // Actions
+        const startOrder = (orderId) => {
+            const order = kitchenState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            order.status = 'preparing';
+            order.startedAt = new Date().toISOString();
+            
+            saveKitchenOrders(kitchenState.orders);
+            renderOrders();
+            
+            showNotification(`Préparation commencée table ${order.tableId}`, 'success');
+        };
+
+        const markAsReady = (orderId) => {
+            const order = kitchenState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            order.status = 'ready';
+            
+            saveKitchenOrders(kitchenState.orders);
+            renderOrders();
+            
+            // Notification service
+            notifyService(order.tableId);
+            
+            showNotification(`Commande table ${order.tableId} prête`, 'success');
+        };
+
+        const delayOrder = (orderId) => {
+            const order = kitchenState.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            showDelayModal(order);
+        };
+
+        // Modal délai
+        const showDelayModal = (order) => {
+            const modal = document.createElement('div');
+            modal.className = 'delay-modal';
+            modal.innerHTML = `
+                <h3><i class="fas fa-clock"></i> Reporter la commande</h3>
+                <div class="delay-options">
+                    <div class="delay-option" data-minutes="5">5 minutes</div>
+                    <div class="delay-option" data-minutes="10">10 minutes</div>
+                    <div class="delay-option" data-minutes="15">15 minutes</div>
+                    <div class="delay-option" data-minutes="30">30 minutes</div>
+                </div>
+                <div class="modal-actions">
+                    <button class="action-btn btn-delay" style="flex:1" onclick="this.closest('.delay-modal').remove()">
+                        Annuler
+                    </button>
+                    <button class="action-btn btn-start" style="flex:1" onclick="applyDelay(${order.id}, this)">
+                        Confirmer
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            modal.querySelectorAll('.delay-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    modal.querySelectorAll('.delay-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    modal.dataset.delay = opt.dataset.minutes;
+                });
+            });
+        };
+
+        const applyDelay = (orderId, btn) => {
+            const modal = btn.closest('.delay-modal');
+            const minutes = modal.dataset.delay;
+            
+            if (!minutes) {
+                showNotification('Sélectionnez un délai', 'warning');
+                return;
+            }
+
+            const order = kitchenState.orders.find(o => o.id === orderId);
+            if (order) {
+                order.priority = 'urgent';
+                saveKitchenOrders(kitchenState.orders);
+            }
+
+            modal.remove();
+            renderOrders();
+            showNotification(`Commande reportée de ${minutes} minutes`, 'info');
+        };
+
+        // Notification service
+        const notifyService = (tableId) => {
+            // Simule notification aux serveurs
+            console.log(`Notification: Table ${tableId} prête`);
+            
+            // Son
+            playNotificationSound();
+        };
+
+        // Statistiques
+        const updateStats = () => {
+            const stats = {
+                pending: kitchenState.orders.filter(o => o.status === 'pending').length,
+                preparing: kitchenState.orders.filter(o => o.status === 'preparing').length,
+                ready: kitchenState.orders.filter(o => o.status === 'ready').length,
+                late: kitchenState.orders.filter(o => {
+                    if (o.status !== 'preparing') return false;
+                    const startTime = o.startedAt ? new Date(o.startedAt) : new Date(o.createdAt);
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    return elapsed > KITCHEN_CONFIG.warningTime;
+                }).length
+            };
+
+            document.getElementById('stat-pending').textContent = stats.pending;
+            document.getElementById('stat-preparing').textContent = stats.preparing;
+            document.getElementById('stat-ready').textContent = stats.ready;
+            document.getElementById('stat-late').textContent = stats.late;
+        };
+
+        // Notification
+        const showNotification = (message, type = 'info') => {
+            const notification = document.createElement('div');
+            notification.className = `kitchen-notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        };
+
+        // Impression ticket cuisine
+        const printKitchenOrder = (order) => {
+            // Simule impression - À connecter au module printing.js
+            console.log('Printing kitchen order:', order);
+            
+            const printContent = `
+                === CUISINE ===
+                Table: ${order.tableId}
+                #${order.number}
+                ${new Date().toLocaleTimeString()}
+                ------------------------
+                ${order.items.map(i => `${i.qty}x ${i.name}${i.notes ? ' ('+i.notes+')' : ''}`).join('\n')}
+                ------------------------
+            `;
+            
+            // Utiliser le module printing
+            if (window.Printing) {
+                Printing.print(printContent, 'kitchen');
+            }
+        };
+
+        // Nettoyage
+        window.addEventListener('beforeunload', () => {
+            // Arrêter tous les timers
+            Object.values(kitchenState.timers).forEach(clearInterval);
+        });
+    </script>
+</body>
+</html>
