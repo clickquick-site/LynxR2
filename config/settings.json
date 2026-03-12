@@ -1,0 +1,163 @@
+{
+    "version": "4.0.0",
+    "restaurant": {
+        "name": "R.Lynx™ RestFast",
+        "address": "123 Avenue Commerciale, Alger",
+        "phone": "+213 123 456 789",
+        "email": "contact@rlynx.com",
+        "siret": "12345678901234",
+        "tva": 9,
+        "currency": "DZD",
+        "timezone": "Africa/Algiers"
+    },
+    "printing": {
+        "default": {
+            "printer": "system-default",
+            "paperSize": "80mm",
+            "characters": 42,
+            "copies": 1,
+            "autoCut": true,
+            "openDrawer": true
+        },
+        "kitchen": {
+            "printer": "kitchen-printer",
+            "paperSize": "80mm",
+            "characters": 42,
+            "copies": 1,
+            "autoCut": true
+        },
+        "receipt": {
+            "printer": "receipt-printer",
+            "paperSize": "80mm",
+            "characters": 42,
+            "copies": 1,
+            "autoCut": true,
+            "openDrawer": true,
+            "footer": "Merci de votre visite!",
+            "logo": true
+        },
+        "labels": {
+            "printer": "label-printer",
+            "paperSize": "40mm",
+            "characters": 24,
+            "copies": 1
+        }
+    },
+    "features": {
+        "gestureMode": true,
+        "soundEffects": true,
+        "autoBackup": true,
+        "cloudSync": false,
+        "offlineMode": true,
+        "multiLanguage": true,
+        "darkMode": true,
+        "tableService": true,
+        "takeaway": true,
+        "delivery": true,
+        "reservations": true,
+        "kitchenDisplay": true,
+        "inventory": true,
+        "customerDisplay": true,
+        "loyaltyProgram": true,
+        "giftCards": true
+    },
+    "backup": {
+        "autoBackupInterval": 1800000,
+        "maxBackups": 50,
+        "compressionEnabled": true,
+        "cloudProvider": "local",
+        "cloudConfig": {
+            "dropbox": {
+                "enabled": false,
+                "folder": "/RLynxBackups"
+            },
+            "googleDrive": {
+                "enabled": false,
+                "folder": "RLynxBackups"
+            }
+        }
+    },
+    "security": {
+        "sessionTimeout": 28800000,
+        "maxLoginAttempts": 5,
+        "lockTimeout": 900000,
+        "passwordPolicy": {
+            "minLength": 6,
+            "requireNumbers": true,
+            "requireSpecial": false,
+            "expiryDays": 90
+        },
+        "auditLog": true,
+        "encryption": true
+    },
+    "network": {
+        "printers": [
+            {
+                "id": "kitchen-printer",
+                "name": "Imprimante Cuisine",
+                "type": "network",
+                "ip": "192.168.1.100",
+                "port": 9100,
+                "paperSize": "80mm"
+            },
+            {
+                "id": "receipt-printer",
+                "name": "Imprimante Tickets",
+                "type": "usb",
+                "vendorId": 1208,
+                "productId": 514,
+                "paperSize": "80mm"
+            }
+        ],
+        "apiEndpoints": {
+            "sync": "https://api.rlynx.com/sync",
+            "backup": "https://api.rlynx.com/backup",
+            "updates": "https://api.rlynx.com/updates"
+        }
+    },
+    "display": {
+        "theme": "dark",
+        "accentColor": "#f59e0b",
+        "animations": true,
+        "compactMode": false,
+        "fontScale": 1,
+        "showTips": true,
+        "gridSize": "medium"
+    },
+    "modules": {
+        "pos": {
+            "quickButtons": true,
+            "splitBill": true,
+            "discounts": true,
+            "serviceCharge": true,
+            "multiplePayments": true,
+            "refunds": true,
+            "cashManagement": true
+        },
+        "kitchen": {
+            "autoAccept": true,
+            "printOnAccept": true,
+            "voiceAlerts": true,
+            "colorCoding": true,
+            "prepTimeTracking": true,
+            "allergenWarnings": true
+        },
+        "inventory": {
+            "autoReorder": true,
+            "lowStockAlert": true,
+            "expiryTracking": true,
+            "costTracking": true,
+            "suppliers": true,
+            "stockHistory": true
+        },
+        "reports": {
+            "sales": true,
+            "products": true,
+            "staff": true,
+            "taxes": true,
+            "profit": true,
+            "forecast": true,
+            "export": ["pdf", "excel", "csv"]
+        }
+    }
+}
